@@ -30,8 +30,9 @@ http://vanillaforums.loginradius.com
 
 Step-by-step implementation Documentation
 ===
-<a href="http://support.loginradius.com/customer/portal/articles/638461-how-do-i-implement-social-login-on-vanilla-2"  target="_blank">Implement Social Login in Vanilla-2</a>
-<a href="http://support.loginradius.com/customer/portal/articles/638463-how-do-i-implement-social-login-on-vanilla-1"  target="_blank">Implement Social Login in Vanilla-1</a>
+<a href="http://support.loginradius.com/customer/portal/articles/638461-how-do-i-implement-social-login-on-vanilla-2"  target="_blank">Implement Social Login for Vanilla-2</a>
+
+<a href="http://support.loginradius.com/customer/portal/articles/638463-how-do-i-implement-social-login-on-vanilla-1"  target="_blank">Implement Social Login for Vanilla-1</a>
 
 
 Authors and Contributors
