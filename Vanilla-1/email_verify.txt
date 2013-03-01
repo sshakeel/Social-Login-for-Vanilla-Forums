@@ -1,0 +1,4 @@
+Hello {user_name},
+
+To activate the account click on the following link or copy-paste it in your browser:
+{forum_url}
