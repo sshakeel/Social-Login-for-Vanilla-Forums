@@ -13,7 +13,7 @@ Contact Vanilla Forums Inc. at support [at] vanillaforums [dot] com
 $PluginInfo['SocialLogin'] = array(
                                     'Name' => 'Social Login',
 									'Description' => 'This plugin integrates Vanilla with SocialLogin. <b>You must register your application with SocialLogin for this plugin to work.</b>',
-									'Version' => '1.1.1',
+									'Version' => '1.1.2',
 									'RequiredTheme' => FALSE,
 									'RequiredPlugins' => FALSE,
 									'MobileFriendly' => TRUE,
@@ -67,9 +67,9 @@ $SignInHtml=  $jsfiles.'<div id="interfacecontainerdiv" class="interfacecontaine
 	else {
 	  $loc = urlencode($http.$_SERVER["HTTP_HOST"].$_SERVER['PHP_SELF']);
 	}
-    $js_files='<script src="http://hub.loginradius.com/include/js/LoginRadius.js" ></script> <script type="text/javascript"> 
+    $js_files='<script src="//hub.loginradius.com/include/js/LoginRadius.js" ></script> <script type="text/javascript"> 
 	function loginradius_interface() { $ui = LoginRadius_SocialLogin.lr_login_settings;$ui.interfacesize = "small";$ui.apikey = "'.$AppID.'";$ui.callback="'.$loc.'"; $ui.lrinterfacecontainer ="interfacecontainerdiv"; LoginRadius_SocialLogin.init(options); }
-	var options={}; options.login=true; LoginRadius_SocialLogin.util.ready(loginradius_interface); </script><script src="http://hub.loginradius.com/include/js/LoginRadius.js" ></script> <script type="text/javascript"> var options={}; options.login=true; LoginRadius_SocialLogin.util.ready(function () { $ui = LoginRadius_SocialLogin.lr_login_settings;$ui.interfacesize = "small";$ui.apikey = "'.$AppID.'";$ui.callback="'.$loc.'"; $ui.lrinterfacecontainer ="interfacecontainerbasediv"; LoginRadius_SocialLogin.init(options); }); </script>';
+	var options={}; options.login=true; LoginRadius_SocialLogin.util.ready(loginradius_interface); </script><script src="//hub.loginradius.com/include/js/LoginRadius.js" ></script> <script type="text/javascript"> var options={}; options.login=true; LoginRadius_SocialLogin.util.ready(function () { $ui = LoginRadius_SocialLogin.lr_login_settings;$ui.interfacesize = "small";$ui.apikey = "'.$AppID.'";$ui.callback="'.$loc.'"; $ui.lrinterfacecontainer ="interfacecontainerbasediv"; LoginRadius_SocialLogin.init(options); }); </script>';
 $Sender->Head->AddString($js_files);
 }
   public function Base_BeforeSignInButton_Handler($Sender, $Args) {

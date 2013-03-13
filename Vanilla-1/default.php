@@ -3,7 +3,7 @@
 Extension Name:  Social Login
 Extension Url: http://vanillaforums.org/
 Description: LoginRadius enables Social Login Plugin for Vanilla Forums.
-Version: 1.1
+Version: 1.1.0
 Author: LoginRadius Team
 Author Url: http://www.loginradius.com
 */
@@ -36,7 +36,7 @@ $Head->AddStyleSheet('extensions/SocialLogin/login.css', 'screen', 100, '');
 	 $AppID= trim($Context->Configuration['API_KEY']) ;
 	
 
-$Head->AddScript('http://hub.loginradius.com/include/js/LoginRadius.js');
+$Head->AddScript('//hub.loginradius.com/include/js/LoginRadius.js');
 $Head->AddString('<script type="text/javascript">var options={}; options.login=true; LoginRadius_SocialLogin.util.ready(function () { $ui = LoginRadius_SocialLogin.lr_login_settings;$ui.interfacesize = "";$ui.apikey = "'.$AppID.'";$ui.callback="'.$loc.'"; $ui.lrinterfacecontainer ="interfacecontainerdiv"; LoginRadius_SocialLogin.init(options); });</script>');
 $Context->Configuration['PERMISSION_MANAGE_SOCIALLOGIN'] = '0';
 
@@ -44,7 +44,7 @@ $Context->Configuration['PERMISSION_MANAGE_SOCIALLOGIN'] = '0';
 
 if (!array_key_exists('SOCIALLOGIN_VERSION', $Configuration)) {
 
-   AddConfigurationSetting($Context, 'SOCIALLOGIN_VERSION', '1.1');
+   AddConfigurationSetting($Context, 'SOCIALLOGIN_VERSION', '1.1.0');
    
    AddConfigurationSetting($Context, 'Sociallogin_email', 'yes');
    
