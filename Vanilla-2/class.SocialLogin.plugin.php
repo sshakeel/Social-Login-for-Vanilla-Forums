@@ -427,16 +427,17 @@ class SocialLoginPlugin extends Gdn_Plugin {
 		$MappingTitle=!empty($MappingTitle)? $MappingTitle :'';
 		$Get_Lr_Data=$_SESSION['lrdata_store'];
 		$Is_User_Login=Gdn::Session()->UserID;
-		if(Gdn::Session()->UserID >0 ) {
-	 	$Map_Provider=Gdn::SQL()
-		->Select('ProviderKey')
-		->From('UserAuthentication')
-		->Where('UserID',$Is_User_Login)
-		->Get()->Result(DATASET_TYPE_ARRAY);
-		foreach ($Map_Provider as $UpdateUser) {
-    		$Check_Map_Provider[] = GetValue('ProviderKey', $UpdateUser);
-		}
-	
+		if(Gdn::Session()->UserID >0) {
+			$Map_Provider=Gdn::SQL()
+			->Select('ProviderKey')
+			->From('UserAuthentication')
+			->Where('UserID',$Is_User_Login)
+			->Get()->Result(DATASET_TYPE_ARRAY);
+			foreach ($Map_Provider as $UpdateUser) {
+			$Check_Map_Provider[] =
+			GetValue('ProviderKey', $UpdateUser);
+			}
+
 		$Map_current_Provider=Gdn::SQL()
 		->Select('ProviderKey')
 		->From('UserAuthentication')
@@ -444,75 +445,81 @@ class SocialLoginPlugin extends Gdn_Plugin {
 		->Where('UserID',$Is_User_Login)
 		->Get()->Result(DATASET_TYPE_ARRAY);
 		foreach ($Map_current_Provider as $UpdateUser) {
-    		$Check_Map_current_Provider[] =
-	 		GetValue('ProviderKey', $UpdateUser);
+			$Check_Map_current_Provider[] =
+			GetValue('ProviderKey', $UpdateUser);
 		}
 		$map='<ul>';
-		if(!empty($Check_Map_current_Provider)) {
-			$map.='<li style="color:#1e79a7;font-family:Helvetica,arial,sans-serif; font-size:12px;">'.Img ('plugins/SocialLogin/Images/'.($Get_Lr_Data['Provider']).'.png', array('style' => 'max-width: 763px;')).'<span style="color:GREEN"> Currently connected  </span> With '. ucfirst($Get_Lr_Data['Provider']) .Anchor(Img('/plugins/SocialLogin/Images/del2.png', array('style' => 'max-width: 763px;')), '?kmode=remove&provider_id='.$Get_Lr_Data['Provider']. '&title=delete' ). '</li>';
-		}
-		foreach($Check_Map_Provider as $identity) {   
-	    	if($identity!=$Get_Lr_Data['Provider'])
+		if(!empty($Check_Map_current_Provider))
+		{
+			$map.='<li style="color:#1e79a7;font-family:Helvetica,arial,sans-serif; font-size:12px;">'.Img('plugins/SocialLogin/Images/'.($Get_Lr_Data['Provider']).'.png', array('style' => 'max-width: 763px;')).'<span style="color:GREEN"> Currently connected </span> With '. ucfirst($Get_Lr_Data['Provider']) .Anchor(Img('/plugins/SocialLogin/Images/del2.png', array('style' => 'max-width: 763px;')), '?kmode=remove&provider_id='.$Get_Lr_Data['Provider']. '&title=delete' ). '</li>';
+	}
+		foreach($Check_Map_Provider as $identity)
+		{
+			if($identity!=$Get_Lr_Data['Provider'])
 			{
 				$map.='<li style="color:#1e79a7;font-family:Helvetica,arial,sans-serif; font-size:12px; ">'.Img('plugins/SocialLogin/Images/'.$identity.'.png', array('style' => 'max-width: 763px;')).' Connected With '.ucfirst($identity).' '.Anchor(Img('/plugins/SocialLogin/Images/del2.png', array('style' => 'max-width: 763px;')), '?kmode=remove&provider_id='.$identity. '&title=delete' ).'</li>';
 			}
 		}
-	
-		'</ul>';
-	
+
+	'</ul>';
+
 		if($_GET['kmode'] == 'remove'){
 			Gdn::SQL()->Delete('UserAuthentication', array('ProviderKey' => $_GET['provider_id'],'UserID'=> $Is_User_Login));
 			$Sender->InformMessage(T("Your Account have sucessfully Deleted"));
 			$Sender->RedirectUrl= Url('profile.php');
 		}
 		$SideMenu = $Sender->EventArguments['SideMenu'];
-    	$SideMenu->AddLink($MappingTitle,'<center style="margin:10px 0 0 0"><div id="interfacecontainerdiv" 		class="interfacecontainerdiv"></div></center><br/>'.$map); 
+		$SideMenu->AddLink($MappingTitle,'<center style="margin:10px 0 0 0"><div id="interfacecontainerdiv" 					class="interfacecontainerdiv"></div></center><br/>'.$map);
 		$Sender->EventArguments['SideMenu'] = $SideMenu;
 		$Secret = trim(C('Plugins.SocialLogin.Secretkey'));
-		$mapobj = new LoginRadius();
-		$map_userprofile = $mapobj ->loginradius_get_data($Secret);
-		$lrdata=array(); 
-        if ($mapobj ->IsAuthenticated == TRUE  && $Is_User_Login>0) {
-	 		$lrdata['id'] = (!empty($map_userprofile->ID) ? $$map_userprofile->ID :"");
-	 		$lrdata['Provider']    = (!empty($map_userprofile->Provider) ? $map_userprofile->Provider :"");
-	 		$Map_Lr_Id=Gdn::SQL()
+		$obj1 = new LoginRadius();
+		$userprofile1 = $obj1->loginradius_get_data($Secret);
+		$lrdata=array();
+		if ($obj1->IsAuthenticated == TRUE && $Is_User_Login>0) {
+			$lrdata['id'] = (!empty($userprofile1->ID) ? $userprofile1->ID :"");
+			$lrdata['Provider'] = (!empty($userprofile1->Provider) ? $userprofile1->Provider :"");
+			$Map_Lr_Id=Gdn::SQL()
 			->Select('ForeignUserKey')
 			->From('UserAuthentication')
 			->Where('ForeignUserKey',$lrdata['id'])
 			->Get()->Result(DATASET_TYPE_ARRAY);
 			foreach ($Map_Lr_Id as $UpdateUser) {
-    			$Check_Map_Lr_Id = GetValue('ForeignUserKey', $UpdateUser);
+				$Check_Map_Lr_Id = GetValue('ForeignUserKey', $UpdateUser);
+		}
+		if(empty($Check_Map_Lr_Id))
+		{
+			$Check_Provider=Gdn::SQL()
+			->Select('ProviderKey')
+			->From('UserAuthentication')
+			->Where('ProviderKey',$lrdata['Provider'])
+			->Where('UserId',$Is_User_Login)
+			->Get()->Result(DATASET_TYPE_ARRAY);
+			foreach ($Check_Provider as $UpdateUser1) {
+				$Check_Provider= GetValue('ProviderKey', $UpdateUser1);
 			}
-	 		if(empty($Check_Map_Lr_Id)) { 	
-     			$Check_Provider=Gdn::SQL()
-				->Select('ProviderKey')
-				->From('UserAuthentication')
-				->Where('ProviderKey',$lrdata['Provider'])
-				->Where('UserId',$Is_User_Login)
-				->Get()->Result(DATASET_TYPE_ARRAY);
-				foreach ($Check_Provider as $UpdateUser1) {
-    				$Check_Provider= GetValue('ProviderKey', $UpdateUser1);
-				}
-				if(empty($Check_Provider)) {
-					$Map_Data = array(
-					'ForeignUserKey'=>$lrdata['id'],
-					'ProviderKey'=>$lrdata['Provider'],
-					'UserID'=>	$Is_User_Login	
-					);
-					Gdn::SQL()->Options('Ignore', TRUE)->Insert('UserAuthentication', $Map_Data);
-					$Sender->InformMessage(T("Your Account have sucessfully mapped"));
-					$Sender->RedirectUrl= Url('profile.php');
-				}
-				else  {
-					$Sender->InformMessage(T("Account cannot be mapped as it already exists in our database."));
-					$Sender->RedirectUrl= Url('profile.php');
-				}
-			}
-		  else
-			$Sender->InformMessage(T("Your Account have Already mapped with this Account"));
-   		  }
+		if(empty($Check_Provider))
+		{
+			$Map_Data = array(
+			'ForeignUserKey'=>$lrdata['id'],
+			'ProviderKey'=>$lrdata['Provider'],
+			'UserID'=> $Is_User_Login
+			);
+			Gdn::SQL()->Options('Ignore', TRUE)->Insert('UserAuthentication', $Map_Data);
+			$Sender->InformMessage(T("Your Account have sucessfully mapped"));
+			$Sender->RedirectUrl= Url('profile.php');
+		}
+		else
+		{
+			$Sender->InformMessage(T("Account cannot be mapped as it already exists in our database."));
+			$Sender->RedirectUrl= Url('profile.php');
+		}
+	}
+	else
+		$Sender->InformMessage(T("Your Account have Already mapped with this Account"));
+	}
 	}
 }
+
 
     /* 
 	function for adding the widget before comment body on discussion page.
@@ -900,7 +907,7 @@ class SocialLoginPlugin extends Gdn_Plugin {
 			$HorizontalCounter=((C('Plugins.SocialCounter.Horizontalcountertheme')=='')?'hybrid-horizontal-horizontal':C('Plugins.SocialCounter.Horizontalcountertheme'));
 			$HorizontalCounterPosition=((C('Plugins.SocialCounter.Horizontalcounterposition')=='')?'Bottom':C('Plugins.SocialCounter.Horizontalcounterposition'));
 			$VerticalCounterPosition=((C('Plugins.SocialCounter.Verticalcounterposition')=='')?'topright':C('Plugins.SocialCounter.Verticalcounterposition'));
-			$VerticalCounterPosition=((C('Plugins.SocialCounter.loginRadiusLIrearrange')=='')?'rearrange1':C('Plugins.SocialCounter.loginRadiusLIrearrange'));
+			
 			
 		    /*
 		    sociallogin setting call
