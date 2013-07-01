@@ -5,7 +5,6 @@ class LoginRadius {
   public function loginradius_get_data($ApiSecrete) {
     $IsAuthenticated = false;
 	$USE_API = C('Plugins.SocialLogin.Use_Api');
-	
 	if (isset($_REQUEST['token'])) {
       $ValidateUrl = "https://hub.loginradius.com/userprofile/".$ApiSecrete."/".$_REQUEST['token']."";
 	  $JsonResponse = $this->loginradius_call_api($ValidateUrl, $USE_API);
